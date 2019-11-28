@@ -1,21 +1,16 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import logo from './logo.svg';
 import './App.css';
+import CreateUser from '../CreateUser/CreateUser';
 
 const App = () => {
-  const Mladja = 123    ;
-
-
-
-  
-  const Mladja2 = 123;
+  const test = useSelector(state => state.user.testValue);
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        {test && <p>Mladja voli maju</p>}
         <a
           className="App-link"
           href="https://reactjs.org"
@@ -24,6 +19,7 @@ const App = () => {
         >
           Learn React
         </a>
+        <CreateUser />
       </header>
     </div>
   );
