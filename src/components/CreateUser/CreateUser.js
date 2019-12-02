@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { submitUser } from '../../store/actions/network/network.actions';
+import { CreateUserStyle } from './CreateUser.style';
 
 const CreateUser = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const dispatch = useDispatch();
   return (
-    <div>
+    <CreateUserStyle>
       <form
         onSubmit={event => {
           event.preventDefault();
@@ -42,7 +43,7 @@ const CreateUser = () => {
           color="primary"
         />
       </form>
-    </div>
+    </CreateUserStyle>
   );
 };
 
