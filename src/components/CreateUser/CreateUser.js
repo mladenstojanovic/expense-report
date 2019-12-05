@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { submitUser } from '../../store/actions/network/network.actions';
-import { CreateUserStyle } from './CreateUser.style';
+import {
+  CreateUserStyle,
+  CreateUserFormInputButtonStyle,
+  CreateUserFormStyle,
+  CreateUserFormInputStyle,
+  CreateUserFormLabelStyle
+} from './CreateUser.style';
 
 const CreateUser = () => {
   const [email, setEmail] = useState('');
@@ -9,14 +15,16 @@ const CreateUser = () => {
   const dispatch = useDispatch();
   return (
     <CreateUserStyle>
-      <form
+      <CreateUserFormStyle
         onSubmit={event => {
           event.preventDefault();
           dispatch(submitUser({ email }));
         }}
       >
-        <label htmlFor="email">Email</label>
-        <input
+        <CreateUserFormLabelStyle htmlFor="email">
+          Email
+        </CreateUserFormLabelStyle>
+        <CreateUserFormInputStyle
           id="email"
           type="email"
           name="email"
@@ -25,8 +33,10 @@ const CreateUser = () => {
             setEmail(event.target.value);
           }}
         />
-        <label htmlFor="phone">Phone Number</label>
-        <input
+        <CreateUserFormLabelStyle htmlFor="phone">
+          Phone Number
+        </CreateUserFormLabelStyle>
+        <CreateUserFormInputStyle
           id="phone"
           type="phone"
           name="phone"
@@ -35,14 +45,8 @@ const CreateUser = () => {
             setPhone(event.target.value);
           }}
         />
-        <input
-          type="submit"
-          value="Submit"
-          mt={3}
-          bg="secondary"
-          color="primary"
-        />
-      </form>
+        <CreateUserFormInputButtonStyle type="submit" value="Submit" />
+      </CreateUserFormStyle>
     </CreateUserStyle>
   );
 };

@@ -7,10 +7,12 @@ import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
 import store from './store';
 import theme from './styles/theme';
+import GlobalStyle from './styles/globalStyle';
 
 ReactDOM.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <App />
     </ThemeProvider>
   </Provider>,

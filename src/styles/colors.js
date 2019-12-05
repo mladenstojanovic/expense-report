@@ -1,3 +1,5 @@
 export const colors = {
-  mladja: 'red'
+  lightBlue: '#09d3ac',
+  darkBlue: '#282c34',
+  white: ''
 };
