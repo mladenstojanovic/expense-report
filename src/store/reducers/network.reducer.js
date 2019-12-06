@@ -11,16 +11,20 @@ import {
   GET_TRANSACTIONS_SUCCESS,
   NETWORK_OPERATIONS_START,
   CONNECTION_JOB_START,
-  CONNECTION_JOB_SUCCESS
+  CONNECTION_JOB_SUCCESS,
+  IDLE
 } from '../actions/network/network.constants';
+import { sortTransactionData } from '../../utils/utils';
+const json = require('../../response.mock.json');
 
 const initialState = {
-  inProgress: false,
+  networkStatus: IDLE,
   token: null,
   createUser: null,
   addConnection: null,
   job: null,
-  getTransactions: null
+  getTransactions: null,
+  transactionData: sortTransactionData(json.data)
 };
 
 const networkReducer = (state = initialState, action) => {
@@ -28,7 +32,7 @@ const networkReducer = (state = initialState, action) => {
     case NETWORK_OPERATIONS_START:
       return {
         ...state,
-        inProgress: true
+        networkStatus: IN_PROGRESS
       };
     case GET_AUTH_TOKEN_START:
       return {
@@ -78,7 +82,9 @@ const networkReducer = (state = initialState, action) => {
     case GET_TRANSACTIONS_SUCCESS:
       return {
         ...state,
-        getTransactions: SUCCESS
+        getTransactions: SUCCESS,
+        networkStatus: SUCCESS,
+        transactionData: action.payload
       };
     default:
       return state;

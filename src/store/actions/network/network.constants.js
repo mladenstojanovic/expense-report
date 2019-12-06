@@ -19,5 +19,6 @@ export const CONNECTION_JOB_ERROR = '[NETWORK] Connection Job Error';
 export const IN_PROGRESS = 'in progress';
 export const SUCCESS = 'success';
 export const ERROR = 'error';
+export const IDLE = 'idle';
 
 export const RETRIEVE_TRANSACTIONS = 'retrieve-transactions';

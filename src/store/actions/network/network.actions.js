@@ -1,4 +1,3 @@
-// import Axios from 'axios';
 import {
   GET_AUTH_TOKEN_START,
   CREATE_USER_START,
@@ -19,7 +18,7 @@ import {
   SUCCESS,
   RETRIEVE_TRANSACTIONS
 } from './network.constants';
-import { sleep } from '../../../utils/utils';
+import { sleep, sortTransactionData } from '../../../utils/utils';
 
 export const getAuthTokenStart = () => ({
   type: GET_AUTH_TOKEN_START
@@ -73,8 +72,9 @@ export const getTransactionsStart = () => ({
   type: GET_TRANSACTIONS_START
 });
 
-export const getTransactionsSuccess = () => ({
-  type: GET_TRANSACTIONS_SUCCESS
+export const getTransactionsSuccess = payload => ({
+  type: GET_TRANSACTIONS_SUCCESS,
+  payload
 });
 
 export const getTransactionsError = () => ({
@@ -162,10 +162,10 @@ export const submitUser = userData => {
     try {
       dispatch(connectionJobStart());
       //@TODO: config?
-      let retries = 10;
+      let retries = 20;
       do {
         //@TODO: config?
-        await sleep(15000);
+        await sleep(10000);
 
         const job = await fetch(`${parsedAddConnectionResponse.links.self}`, {
           headers: {
@@ -206,11 +206,11 @@ export const submitUser = userData => {
         );
         const parsedGetTransactionsResponse = await getTransactionsResponse.json();
 
-        console.log(
-          'PARSED GET TRANSACITON RESPONSE',
-          parsedGetTransactionsResponse
+        dispatch(
+          getTransactionsSuccess(
+            sortTransactionData(parsedGetTransactionsResponse.data)
+          )
         );
-        dispatch(getTransactionsSuccess());
       } catch {
         dispatch(getTransactionsError());
       }
