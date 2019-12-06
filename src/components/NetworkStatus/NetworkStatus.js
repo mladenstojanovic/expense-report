@@ -1,46 +1,46 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import loader from './loader.svg';
-import success from './success.svg';
+import loader from '../../assets/icons/loader.svg';
+import success from '../../assets/icons/success.svg';
 import {
   NetworkStatusSingleStyle,
   NetworkStatusStyle
 } from './NetworkStatus.style';
-import { IN_PROGRESS } from '../../store/actions/network/network.constants';
+import { SUCCESS } from '../../store/actions/network/network.constants';
 
 const NetworkStatus = () => {
   const network = useSelector(state => state.network);
-  const NOT_STARTED = 'Waiting...';
 
   return (
     <NetworkStatusStyle>
       <NetworkStatusSingleStyle>
-        <img
-          src={network.token === IN_PROGRESS ? loader : success}
-          alt="loader"
-        />{' '}
-        <h2>Authenticating: {network.token || NOT_STARTED}</h2>
+        <img src={network.token !== SUCCESS ? loader : success} alt="loader" />{' '}
+        <h2>Authenticating</h2>
       </NetworkStatusSingleStyle>
       <NetworkStatusSingleStyle>
         <img
-          src={network.token === IN_PROGRESS ? loader : success}
+          src={network.createUser !== SUCCESS ? loader : success}
           alt="loader"
         />
-        <h2>Creating User: {network.createUser || NOT_STARTED}</h2>
+        <h2>Creating User</h2>
       </NetworkStatusSingleStyle>
       <NetworkStatusSingleStyle>
         <img
-          src={network.token === IN_PROGRESS ? loader : success}
+          src={network.addConnection !== SUCCESS ? loader : success}
           alt="loader"
         />
-        <h2>Connecting to the bank: {network.addConnection || NOT_STARTED}</h2>
+        <h2>Connecting to the bank</h2>
+      </NetworkStatusSingleStyle>
+      <NetworkStatusSingleStyle>
+        <img src={network.job !== SUCCESS ? loader : success} alt="loader" />
+        <h2>Waiting for job to finish</h2>
       </NetworkStatusSingleStyle>
       <NetworkStatusSingleStyle>
         <img
-          src={network.token === IN_PROGRESS ? loader : success}
+          src={network.getTransactions !== SUCCESS ? loader : success}
           alt="loader"
         />
-        <h2>Getting transactions: {network.getTransactions || NOT_STARTED}</h2>
+        <h2>Getting transactions</h2>
       </NetworkStatusSingleStyle>
     </NetworkStatusStyle>
   );

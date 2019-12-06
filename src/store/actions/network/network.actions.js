@@ -8,8 +8,18 @@ import {
   CREATE_USER_SUCCESS,
   ADD_BANK_CONNECTION_SUCCESS,
   GET_TRANSACTIONS_SUCCESS,
-  NETWORK_OPERATIONS_START
+  NETWORK_OPERATIONS_START,
+  CONNECTION_JOB_START,
+  CONNECTION_JOB_SUCCESS,
+  GET_AUTH_TOKEN_ERROR,
+  CREATE_USER_ERROR,
+  ADD_BANK_CONNECTION_ERROR,
+  CONNECTION_JOB_ERROR,
+  GET_TRANSACTIONS_ERROR,
+  SUCCESS,
+  RETRIEVE_TRANSACTIONS
 } from './network.constants';
+import { sleep } from '../../../utils/utils';
 
 export const getAuthTokenStart = () => ({
   type: GET_AUTH_TOKEN_START
@@ -17,6 +27,10 @@ export const getAuthTokenStart = () => ({
 
 export const getAuthTokenSuccess = () => ({
   type: GET_AUTH_TOKEN_SUCCESS
+});
+
+export const getAuthTokenError = () => ({
+  type: GET_AUTH_TOKEN_ERROR
 });
 
 export const createUserStart = () => ({
@@ -27,12 +41,32 @@ export const createUserSuccess = () => ({
   type: CREATE_USER_SUCCESS
 });
 
+export const createUserError = () => ({
+  type: CREATE_USER_ERROR
+});
+
 export const addBankConnectionStart = () => ({
   type: ADD_BANK_CONNECTION_START
 });
 
 export const addBankConnectionSuccess = () => ({
   type: ADD_BANK_CONNECTION_SUCCESS
+});
+
+export const addBankConnectionError = () => ({
+  type: ADD_BANK_CONNECTION_ERROR
+});
+
+export const connectionJobStart = () => ({
+  type: CONNECTION_JOB_START
+});
+
+export const connectionJobSuccess = () => ({
+  type: CONNECTION_JOB_SUCCESS
+});
+
+export const connectionJobError = () => ({
+  type: CONNECTION_JOB_ERROR
 });
 
 export const getTransactionsStart = () => ({
@@ -43,75 +77,70 @@ export const getTransactionsSuccess = () => ({
   type: GET_TRANSACTIONS_SUCCESS
 });
 
+export const getTransactionsError = () => ({
+  type: GET_TRANSACTIONS_ERROR
+});
+
 export const networkOperationsStart = () => ({
   type: NETWORK_OPERATIONS_START
 });
 
 export const submitUser = userData => {
   return async dispatch => {
+    let userId;
+    let token;
+    let parsedAddConnectionResponse;
+    let jobFinished = false;
     try {
       dispatch(networkOperationsStart());
       dispatch(getAuthTokenStart());
 
-      console.log('USER DATAAAAAAAAA', userData);
-      console.log('aaaaaaaaaaaaaaaa', `Basic ${process.env.REACT_APP_API_KEY}`);
-      //   const header = `Basic ${process.env.REACT_APP_API_KEY}`;
-      //   const authResponse = await Axios.post(
-      //     'https://au-api.basiq.io/token',
-      //     {},
-      //     {
-      //       headers: {
-      //         Authorization: `Basic ${process.env.REACT_APP_API_KEY}`,
-      //         'Content-Type': 'application/x-www-form-urlencoded',
-      //         'basiq-version': '2.0'
-      //       }
-      //     }
-      //   );
-      const authResponse = await fetch('http://localhost:8080/token', {
+      const authResponse = await fetch('http://localhost:8080/', {
         headers: {
           Authorization: `Basic ${process.env.REACT_APP_API_KEY}`
         }
       });
-      const authResponseJson = await authResponse.json();
+      const authResponseParsed = await authResponse.json();
 
+      token = authResponseParsed.access_token;
       dispatch(getAuthTokenSuccess());
-      const token = authResponseJson.access_token;
-      console.log('AUTH RESPONSE', authResponseJson);
-
+    } catch {
+      dispatch(getAuthTokenError());
+    }
+    try {
       dispatch(createUserStart());
 
-      console.log('USER BODY', JSON.stringify(userData));
-      console.log('AUTH', `Bearer ${token}`);
-
-      const createUserResponse = await fetch('https://au-api.basiq.io/users', {
-        method: 'POST',
-        body: JSON.stringify(userData),
-        headers: {
-          Authorization: `Bearer ${token}`
+      const createUserResponse = await fetch(
+        `${process.env.REACT_APP_BASE_ENDPOINT}/users`,
+        {
+          method: 'POST',
+          body: JSON.stringify(userData),
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
-
+      );
       const createUserResponseJson = await createUserResponse.json();
 
+      userId = createUserResponseJson.id;
       dispatch(createUserSuccess());
+    } catch {
+      dispatch(createUserError());
+    }
 
-      console.log('CREATE USER RESPOSNE', createUserResponseJson);
-
-      const userId = createUserResponseJson.id;
+    try {
       const testUser = {
-        loginId: 'gavinBelson',
-        password: 'hooli2016',
+        loginId: process.env.REACT_APP_LOGIN_ID,
+        password: process.env.REACT_APP_LOGIN_PWD,
         institution: {
-          id: 'AU00000'
+          id: process.env.REACT_APP_LOGIN_INSTITUTION_ID
         }
       };
-
-      console.log(JSON.stringify(testUser));
 
       dispatch(addBankConnectionStart());
 
       const addConnectionResponse = await fetch(
-        `https://au-api.basiq.io/users/${userId}/connections`,
+        `${process.env.REACT_APP_BASE_ENDPOINT}/users/${userId}/connections`,
         {
           method: 'POST',
           body: JSON.stringify(testUser),
@@ -121,25 +150,23 @@ export const submitUser = userData => {
           }
         }
       );
-      const parsedAddConnectionResponse = await addConnectionResponse.json();
+      parsedAddConnectionResponse = await addConnectionResponse.json();
+
+      // mozda neki error handling?
 
       dispatch(addBankConnectionSuccess());
+    } catch {
+      dispatch(addBankConnectionError());
+    }
 
-      console.log(
-        'PARSED ADD CONNECTION RESPOSNE',
-        parsedAddConnectionResponse
-      );
-
-      dispatch(getTransactionsStart());
-
-      const sleep = milliseconds => {
-        return new Promise(resolve => setTimeout(resolve, milliseconds));
-      };
-
-      let jobFinished = false;
-      let retries = 5;
+    try {
+      dispatch(connectionJobStart());
+      //@TODO: config?
+      let retries = 10;
       do {
-        console.log('DOO START ----------------------------------------');
+        //@TODO: config?
+        await sleep(15000);
+
         const job = await fetch(`${parsedAddConnectionResponse.links.self}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -147,49 +174,46 @@ export const submitUser = userData => {
           }
         });
         const parsedJob = await job.json();
-        const finishedJobs = parsedJob.steps.reduce((accumulator, step) => {
-          console.log('AKUMULATOR', accumulator);
-          console.log('step', step);
-          console.log('step status', step.status);
-          if (step.status === 'success') {
-            accumulator++;
-            return accumulator;
-          } else {
-            return accumulator;
-          }
-        }, 0);
+        const retrieveTransactionJob = parsedJob.steps.find(
+          job => job.title === RETRIEVE_TRANSACTIONS
+        );
 
-        console.log('FINISHED JOBS', finishedJobs);
-        console.log('PARSED JOB', parsedJob);
-        console.log('RETRIES', retries);
-
-        if (finishedJobs === 3) {
+        if (retrieveTransactionJob.status === SUCCESS) {
           jobFinished = true;
         } else {
           retries--;
         }
-        console.log('DOO END ----------------------------------------');
-        await sleep(15000);
       } while (!jobFinished && retries > 0);
+      if (jobFinished) {
+        dispatch(connectionJobSuccess());
+      } else {
+        dispatch(connectionJobError());
+      }
+    } catch {
+      dispatch(connectionJobError());
+    }
 
-      dispatch(getTransactionsSuccess());
+    if (jobFinished) {
+      try {
+        dispatch(getTransactionsStart());
+        const getTransactionsResponse = await fetch(
+          `${process.env.REACT_APP_BASE_ENDPOINT}/users/${userId}/transactions`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        const parsedGetTransactionsResponse = await getTransactionsResponse.json();
 
-      // const getTransactionsResponse = await fetch(
-      //   `https://au-api.basiq.io/users/${userId}/transactions`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`
-      //     }
-      //   }
-      // );
-      // const parsedGetTransactionsResponse = await getTransactionsResponse.json();
-
-      // console.log(
-      //   'PARSED GET TRANSACITON RESPONSE',
-      //   parsedGetTransactionsResponse
-      // );
-    } catch (err) {
-      console.log('ERRORRRRRRRRRRRR', err);
+        console.log(
+          'PARSED GET TRANSACITON RESPONSE',
+          parsedGetTransactionsResponse
+        );
+        dispatch(getTransactionsSuccess());
+      } catch {
+        dispatch(getTransactionsError());
+      }
     }
   };
 };

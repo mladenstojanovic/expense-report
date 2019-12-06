@@ -9,7 +9,9 @@ import {
   CREATE_USER_SUCCESS,
   ADD_BANK_CONNECTION_SUCCESS,
   GET_TRANSACTIONS_SUCCESS,
-  NETWORK_OPERATIONS_START
+  NETWORK_OPERATIONS_START,
+  CONNECTION_JOB_START,
+  CONNECTION_JOB_SUCCESS
 } from '../actions/network/network.constants';
 
 const initialState = {
@@ -17,6 +19,7 @@ const initialState = {
   token: null,
   createUser: null,
   addConnection: null,
+  job: null,
   getTransactions: null
 };
 
@@ -56,6 +59,16 @@ const networkReducer = (state = initialState, action) => {
       return {
         ...state,
         addConnection: SUCCESS
+      };
+    case CONNECTION_JOB_START:
+      return {
+        ...state,
+        job: IN_PROGRESS
+      };
+    case CONNECTION_JOB_SUCCESS:
+      return {
+        ...state,
+        job: SUCCESS
       };
     case GET_TRANSACTIONS_START:
       return {
