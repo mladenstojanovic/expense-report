@@ -1,47 +1,33 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import loader from '../../assets/icons/loader.svg';
-import success from '../../assets/icons/success.svg';
-import {
-  NetworkStatusSingleStyle,
-  NetworkStatusStyle
-} from './NetworkStatus.style';
-import { SUCCESS } from '../../store/actions/network/network.constants';
+import { NetworkStatusStyle } from './NetworkStatus.style';
+import NetworkStatusSingle from './NetworkStatusSingle/NetworkStatusSingle';
 
 const NetworkStatus = () => {
   const network = useSelector(state => state.network);
-
+  console.log('STATUS NETWORK', network);
   return (
     <NetworkStatusStyle>
-      <NetworkStatusSingleStyle>
-        <img src={network.token !== SUCCESS ? loader : success} alt="loader" />{' '}
-        <h2>Authenticating</h2>
-      </NetworkStatusSingleStyle>
-      <NetworkStatusSingleStyle>
-        <img
-          src={network.createUser !== SUCCESS ? loader : success}
-          alt="loader"
-        />
-        <h2>Creating User</h2>
-      </NetworkStatusSingleStyle>
-      <NetworkStatusSingleStyle>
-        <img
-          src={network.addConnection !== SUCCESS ? loader : success}
-          alt="loader"
-        />
-        <h2>Connecting to the bank</h2>
-      </NetworkStatusSingleStyle>
-      <NetworkStatusSingleStyle>
-        <img src={network.job !== SUCCESS ? loader : success} alt="loader" />
-        <h2>Waiting for job to finish</h2>
-      </NetworkStatusSingleStyle>
-      <NetworkStatusSingleStyle>
-        <img
-          src={network.getTransactions !== SUCCESS ? loader : success}
-          alt="loader"
-        />
-        <h2>Getting transactions</h2>
-      </NetworkStatusSingleStyle>
+      <NetworkStatusSingle
+        networkStatus={network.token}
+        networkTitle={'Authenticating'}
+      />
+      <NetworkStatusSingle
+        networkStatus={network.createUser}
+        networkTitle={'Creating User'}
+      />
+      <NetworkStatusSingle
+        networkStatus={network.addConnection}
+        networkTitle={'Connecting to the bank'}
+      />
+      <NetworkStatusSingle
+        networkStatus={network.job}
+        networkTitle={'Waiting for job to finish'}
+      />
+      <NetworkStatusSingle
+        networkStatus={network.getTransactions}
+        networkTitle={'Getting transactions'}
+      />
     </NetworkStatusStyle>
   );
 };

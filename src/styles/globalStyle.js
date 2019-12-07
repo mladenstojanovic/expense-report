@@ -404,7 +404,22 @@ template {
 [hidden] {
   display: none;
 }
-  
+
+/**
+ * Custom styles 
+ */
+
+ * {
+   box-sizing: border-box;
+ }
+
+ h1 {
+   font-size: ${props => props.theme.fonts.sizes.header}
+ }
+
+ p {
+   font-size: ${props => props.theme.fonts.sizes.paragraph}
+ }
 `;
 
 export default GlobalStyle;

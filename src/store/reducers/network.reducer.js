@@ -14,8 +14,6 @@ import {
   CONNECTION_JOB_SUCCESS,
   IDLE
 } from '../actions/network/network.constants';
-import { sortTransactionData } from '../../utils/utils';
-const json = require('../../response.mock.json');
 
 const initialState = {
   networkStatus: IDLE,
@@ -24,7 +22,7 @@ const initialState = {
   addConnection: null,
   job: null,
   getTransactions: null,
-  transactionData: sortTransactionData(json.data)
+  transactionData: {}
 };
 
 const networkReducer = (state = initialState, action) => {

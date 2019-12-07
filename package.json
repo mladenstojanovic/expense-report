@@ -17,7 +17,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom --watchAll=false",
+    "test:watch": "react-scripts test --env=jsdom",
+    "test:update": "npm run test -- -u",
+    "test:coverage": "npm run test -- --coverage",
     "lint:js": "eslint src/",
     "eject": "react-scripts eject"
   },
@@ -37,8 +40,10 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^9.3.2",
     "babel-plugin-macros": "^2.7.1",
     "husky": "^3.1.0",
+    "jest-styled-components": "^6.3.4",
     "prettier": "^1.19.1"
   },
   "husky": {
@@ -51,5 +56,29 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/**/*.style.js",
+      "!src/styles/**",
+      "!**/node_modules/**",
+      "!**/coverage/**",
+      "!**/serviceWorker.js",
+      "!**/index.js"
+    ],
+    "coverageReporters": [
+      "html",
+      "lcov",
+      "text"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 60,
+        "functions": 85,
+        "lines": 85,
+        "statements": 85
+      }
+    }
   }
 }

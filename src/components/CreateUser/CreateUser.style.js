@@ -9,7 +9,8 @@ export const CreateUserFormStyle = styled.form`
 `;
 
 export const CreateUserFormLabelStyle = styled.label`
-  font-size: 25px;
+  font-size: ${props => props.theme.fonts.sizes.heading};
+  margin-bottom: 3px;
 `;
 
 export const CreateUserFormInputStyle = styled.input`
@@ -17,9 +18,12 @@ export const CreateUserFormInputStyle = styled.input`
   height: 30px;
   margin-bottom: 10px;
   padding-left: 15px;
-  border: 1px solid ${props => props.theme.colors.lightBlue};
+  border: 1px solid
+    ${props => (props.error ? 'red' : props.theme.colors.lightBlue)};
+  border-left: 4px solid
+    ${props => (props.error ? 'red' : props.theme.colors.lightBlue)};
   border-radius: 5px;
-  font-size: 14px;
+  font-size: ${props => props.theme.fonts.sizes.paragraph};
 `;
 
 export const CreateUserFormInputButtonStyle = styled.input`
