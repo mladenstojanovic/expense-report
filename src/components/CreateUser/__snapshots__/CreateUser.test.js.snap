@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test CreateUser component should render correctly 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding-bottom: 1.25rem;
+}
+
+.c1 {
+  margin-bottom: 3px;
+}
+
+.c2 {
+  width: 310px;
+  height: 30px;
+  margin-bottom: 10px;
+  padding-left: 15px;
+  border: 1px solid #09d3ac;
+  border-left: 4px solid #09d3ac;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.c3 {
+  height: 40px;
+  margin-top: 20px;
+  background: transparent;
+  border: 1px solid #09d3ac;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-transition: border-color 0.3s ease-out,background 0.3s ease-out;
+  transition: border-color 0.3s ease-out,background 0.3s ease-out;
+}
+
+.c3:hover {
+  background: #09d3ac;
+  border-color: white;
+}
+
+<div
+  class=""
+>
+  <form
+    class="c0"
+  >
+    <label
+      class="c1"
+      for="email"
+    >
+      Email
+    </label>
+    <input
+      class="c2"
+      data-testid="emailInput"
+      id="email"
+      name="email"
+      type="email"
+      value=""
+    />
+    <label
+      class="c1"
+      for="phone"
+    >
+      Phone Number
+    </label>
+    <input
+      class="c2"
+      data-testid="phoneInput"
+      id="phone"
+      name="phone"
+      type="tel"
+      value=""
+    />
+    <input
+      class="c3"
+      data-testid="formSubmit"
+      type="submit"
+      value="Submit"
+    />
+  </form>
+</div>
+`;

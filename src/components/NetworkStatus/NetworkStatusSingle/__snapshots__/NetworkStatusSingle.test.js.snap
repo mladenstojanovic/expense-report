@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test NetworkStatusSingle component should render correctly 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+<div
+  class="c0"
+>
+  <img
+    alt="loader"
+    src="loader.svg"
+  />
+   
+  <h2>
+    test network title text
+  </h2>
+</div>
+`;
+
+exports[`Test NetworkStatusSingle component should render correctly when network status is success 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+<div
+  class="c0"
+>
+  <img
+    alt="loader"
+    src="success.svg"
+  />
+   
+  <h2>
+    test network title text
+  </h2>
+</div>
+`;

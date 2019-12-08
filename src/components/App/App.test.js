@@ -33,7 +33,7 @@ describe('Test App component', () => {
 
     const mockChild = getByText('Mock Create User');
 
-    expect(mockChild).toBeTruthy();
+    expect(mockChild).toBeInTheDocument();
   });
 
   it('should render network status component with network status in progress', () => {
@@ -47,7 +47,7 @@ describe('Test App component', () => {
 
     const mockChild = getByText('Mock Network Status');
 
-    expect(mockChild).toBeTruthy();
+    expect(mockChild).toBeInTheDocument();
   });
 
   it('should render transaction data component with network status success', () => {
@@ -61,6 +61,6 @@ describe('Test App component', () => {
 
     const mockChild = getByText('Mock Transaction Data');
 
-    expect(mockChild).toBeTruthy();
+    expect(mockChild).toBeInTheDocument();
   });
 });

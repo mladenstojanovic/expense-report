@@ -9,40 +9,49 @@ import {
   CreateUserFormLabelStyle
 } from './CreateUser.style';
 import { isPhoneNumberValid, isEmailValid } from '../../utils/utils';
+import {
+  TYPE_ALL,
+  EMPTY_FORM_ERROR_MESSAGE,
+  INVALID_PHONE_AND_EMAIL_MESSAGE,
+  TYPE_PHONE,
+  INVALID_PHONE_MESSAGE,
+  TYPE_EMAIL,
+  INVALID_EMAIL_MESSAGE
+} from './CreateUser.constants';
 
 const defaultErrorState = {
   type: '',
   errorText: ''
 };
 
-const handleSubmit = (event, email, phone, setError, dispatch) => {
+export const handleSubmit = (event, email, phone, setError, dispatch) => {
   event.preventDefault();
   if (!email && !phone) {
     setError({
-      type: 'all',
-      errorText: 'Please enter your email or phone number'
+      type: TYPE_ALL,
+      errorText: EMPTY_FORM_ERROR_MESSAGE
     });
     return;
   }
   if (email && phone && !isPhoneNumberValid(phone) && !isEmailValid(email)) {
     setError({
-      type: 'all',
-      errorText: 'Email and phone number are invalid'
+      type: TYPE_ALL,
+      errorText: INVALID_PHONE_AND_EMAIL_MESSAGE
     });
     return;
   }
   if (phone && !isPhoneNumberValid(phone)) {
     setError({
-      type: 'phone',
-      errorText: 'Phone number is not valid'
+      type: TYPE_PHONE,
+      errorText: INVALID_PHONE_MESSAGE
     });
     return;
   }
   if (email && !isEmailValid(email)) {
-    setError({ type: 'email', errorText: 'Email is not valid' });
+    setError({ type: TYPE_EMAIL, errorText: INVALID_EMAIL_MESSAGE });
     return;
   }
-  dispatch(submitUser({ email }));
+  dispatch(submitUser({ email, phone }));
 };
 
 const CreateUser = () => {
@@ -65,6 +74,7 @@ const CreateUser = () => {
             id="email"
             type="email"
             name="email"
+            data-testid="emailInput"
             value={email}
             error={error.type === 'email' || error.type === 'all'}
             onChange={event => {
@@ -81,6 +91,7 @@ const CreateUser = () => {
             id="phone"
             type="tel"
             name="phone"
+            data-testid="phoneInput"
             value={phone}
             error={error.type === 'phone' || error.type === 'all'}
             onChange={event => {
@@ -90,10 +101,14 @@ const CreateUser = () => {
               setPhone(event.target.value);
             }}
           />
-          <CreateUserFormInputButtonStyle type="submit" value="Submit" />
+          <CreateUserFormInputButtonStyle
+            type="submit"
+            value="Submit"
+            data-testid="formSubmit"
+          />
         </CreateUserFormStyle>
       </CreateUserStyle>
-      {error.errorText && <p>{error.errorText}</p>}
+      {error.errorText && <p data-testid="errorMessage">{error.errorText}</p>}
     </>
   );
 };

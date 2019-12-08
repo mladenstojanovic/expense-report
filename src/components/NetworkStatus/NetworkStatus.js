@@ -5,7 +5,6 @@ import NetworkStatusSingle from './NetworkStatusSingle/NetworkStatusSingle';
 
 const NetworkStatus = () => {
   const network = useSelector(state => state.network);
-  console.log('STATUS NETWORK', network);
   return (
     <NetworkStatusStyle>
       <NetworkStatusSingle
