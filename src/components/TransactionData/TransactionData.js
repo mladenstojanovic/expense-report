@@ -7,8 +7,6 @@ import {
 
 const TransactionData = () => {
   const transactionData = useSelector(state => state.network.transactionData);
-  console.log('TRANSACTION DATA', transactionData);
-  console.log('TRANSACTION DATA', Object.keys(transactionData));
   return Object.keys(transactionData).map(category => (
     <TransactionDataSingleStyle key={category}>
       <h1>{transactionData[category].title}</h1>

@@ -12,10 +12,16 @@ import {
   NETWORK_OPERATIONS_START,
   CONNECTION_JOB_START,
   CONNECTION_JOB_SUCCESS,
-  IDLE
+  IDLE,
+  GET_AUTH_TOKEN_ERROR,
+  ERROR,
+  CREATE_USER_ERROR,
+  ADD_BANK_CONNECTION_ERROR,
+  CONNECTION_JOB_ERROR,
+  GET_TRANSACTIONS_ERROR
 } from '../actions/network/network.constants';
 
-const initialState = {
+export const initialState = {
   networkStatus: IDLE,
   token: null,
   createUser: null,
@@ -25,7 +31,7 @@ const initialState = {
   transactionData: {}
 };
 
-const networkReducer = (state = initialState, action) => {
+export const networkReducer = (state = initialState, action) => {
   switch (action.type) {
     case NETWORK_OPERATIONS_START:
       return {
@@ -42,6 +48,11 @@ const networkReducer = (state = initialState, action) => {
         ...state,
         token: SUCCESS
       };
+    case GET_AUTH_TOKEN_ERROR:
+      return {
+        ...state,
+        token: ERROR
+      };
     case CREATE_USER_START:
       return {
         ...state,
@@ -51,6 +62,11 @@ const networkReducer = (state = initialState, action) => {
       return {
         ...state,
         createUser: SUCCESS
+      };
+    case CREATE_USER_ERROR:
+      return {
+        ...state,
+        createUser: ERROR
       };
     case ADD_BANK_CONNECTION_START:
       return {
@@ -62,6 +78,11 @@ const networkReducer = (state = initialState, action) => {
         ...state,
         addConnection: SUCCESS
       };
+    case ADD_BANK_CONNECTION_ERROR:
+      return {
+        ...state,
+        addConnection: ERROR
+      };
     case CONNECTION_JOB_START:
       return {
         ...state,
@@ -71,6 +92,11 @@ const networkReducer = (state = initialState, action) => {
       return {
         ...state,
         job: SUCCESS
+      };
+    case CONNECTION_JOB_ERROR:
+      return {
+        ...state,
+        job: ERROR
       };
     case GET_TRANSACTIONS_START:
       return {
@@ -83,6 +109,11 @@ const networkReducer = (state = initialState, action) => {
         getTransactions: SUCCESS,
         networkStatus: SUCCESS,
         transactionData: action.payload
+      };
+    case GET_TRANSACTIONS_ERROR:
+      return {
+        ...state,
+        getTransactions: ERROR
       };
     default:
       return state;

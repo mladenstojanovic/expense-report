@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test TransactionData component should render correctly with data in place 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 80%;
+  margin-bottom: 30px;
+}
+
+.c0 h1 {
+  margin-bottom: 10px;
+  color: #09d3ac;
+}
+
+.c0 p {
+  margin-bottom: 3px;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  margin-left: 30px;
+}
+
+<div
+  class="c0"
+>
+  <h1>
+    Test1
+  </h1>
+  <div
+    class="c1"
+  >
+    <p>
+      Number of transactions: 
+      3
+    </p>
+    <p>
+      Total spent: 
+      300
+    </p>
+    <p>
+      Average amount spent:
+       
+      100.00
+    </p>
+  </div>
+</div>
+`;

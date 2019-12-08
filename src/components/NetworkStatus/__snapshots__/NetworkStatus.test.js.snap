@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test NetworkStatusSingle component should render correctly when everything in network is loading 1`] = `
+exports[`Test NetworkStatus component should render correctly when everything in network is loading 1`] = `
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -78,7 +78,7 @@ exports[`Test NetworkStatusSingle component should render correctly when everyth
 </div>
 `;
 
-exports[`Test NetworkStatusSingle component should render correctly when everything in network is successful 1`] = `
+exports[`Test NetworkStatus component should render correctly when everything in network is successful 1`] = `
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;

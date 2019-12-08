@@ -6,10 +6,18 @@ import { Provider } from 'react-redux';
 import networkReducer from '../store/reducers/network.reducer';
 import theme from '../styles/theme';
 
+/**
+ * Freezes code execution for amount given
+ * @param {number} milliseconds
+ */
 export const sleep = milliseconds => {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
 };
 
+/**
+ *
+ * @param {} data
+ */
 export const sortTransactionData = data => {
   const sortedData = {};
   for (let index = 0; index < data.length; index++) {
@@ -24,7 +32,7 @@ export const sortTransactionData = data => {
       };
     }
     sortedData[data[index].subClass.code].total += Math.abs(
-      parseInt(data[index].amount)
+      parseFloat(data[index].amount)
     );
     sortedData[data[index].subClass.code].numOfTransactions++;
   }

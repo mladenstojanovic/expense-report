@@ -6,7 +6,7 @@ import {
   SUCCESS
 } from '../../store/actions/network/network.constants';
 
-describe('Test NetworkStatusSingle component', () => {
+describe('Test NetworkStatus component', () => {
   it('should render correctly when everything in network is loading', () => {
     const { container } = renderWithReduxAndStyles(<NetworkStatus />, {
       initialState: {
