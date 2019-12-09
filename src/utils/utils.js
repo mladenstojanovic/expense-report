@@ -15,8 +15,8 @@ export const sleep = milliseconds => {
 };
 
 /**
- *
- * @param {} data
+ * Gets data from /transactions and sorts them
+ * by transaction code
  */
 export const sortTransactionData = data => {
   const sortedData = {};

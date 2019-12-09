@@ -138,6 +138,12 @@ export const addConnection = async dispatch => {
   }
 };
 
+/**
+ * Polls the job endpoint until retrieve transactions job is finished
+ *
+ * @param {number} pollingRetries
+ * @param {number} pollingTime [miliseconds]
+ */
 export const connectionJob = async (
   dispatch,
   pollingRetries,

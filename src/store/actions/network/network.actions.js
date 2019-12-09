@@ -89,6 +89,10 @@ export const networkOperationsStart = () => ({
   type: NETWORK_OPERATIONS_START
 });
 
+/**
+ * Calls all endpoints in order to get transactions
+ * @param {email: string, phone: string} userData
+ */
 export const submitUser = userData => {
   return async dispatch => {
     const getAuthTokenResponse = await getAuthToken(dispatch);
