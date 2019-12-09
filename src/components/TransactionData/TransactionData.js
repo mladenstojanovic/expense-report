@@ -14,7 +14,7 @@ const TransactionData = () => {
         <p>
           Number of transactions: {transactionData[category].numOfTransactions}
         </p>
-        <p>Total spent: {transactionData[category].total}</p>
+        <p>Total spent: {transactionData[category].total.toFixed(2)}</p>
         <p>
           Average amount spent:{' '}
           {(

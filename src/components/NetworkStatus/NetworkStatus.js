@@ -1,10 +1,25 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { NetworkStatusStyle } from './NetworkStatus.style';
+import {
+  NetworkStatusStyle,
+  NetworkStatusErrorStyle
+} from './NetworkStatus.style';
 import NetworkStatusSingle from './NetworkStatusSingle/NetworkStatusSingle';
+import { ERROR } from '../../store/actions/network/network.constants';
 
 const NetworkStatus = () => {
   const network = useSelector(state => state.network);
+  const hasErrors = Object.keys(network).find(
+    networkSingle => network[networkSingle] === ERROR
+  );
+
+  if (hasErrors) {
+    return (
+      <NetworkStatusErrorStyle data-testid="networkStatusError">
+        There has been an error. Please try again
+      </NetworkStatusErrorStyle>
+    );
+  }
   return (
     <NetworkStatusStyle>
       <NetworkStatusSingle

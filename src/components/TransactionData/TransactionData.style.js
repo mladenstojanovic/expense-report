@@ -9,6 +9,7 @@ export const TransactionDataSingleStyle = styled.div`
   margin-bottom: 30px;
 
   h1 {
+    margin-top: 0;
     margin-bottom: 10px;
     color: ${props => props.theme.colors.lightBlue};
   }

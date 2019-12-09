@@ -13,4 +13,5 @@ export const AppHeaderStyle = styled.div`
 
 export const AppLogoStyle = styled.img`
   height: 15vmin;
+  margin-bottom: 30px;
 `;
