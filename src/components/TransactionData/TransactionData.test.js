@@ -44,10 +44,10 @@ describe('Test TransactionData component', () => {
       )
     ).toBeInTheDocument();
     expect(
-      getByText(`Total spent: ${transactionData['123'].total}`)
+      getByText(`Total spent: ${transactionData['123'].total.toFixed(2)}`)
     ).toBeInTheDocument();
     expect(
-      getByText(`Total spent: ${transactionData['321'].total}`)
+      getByText(`Total spent: ${transactionData['321'].total.toFixed(2)}`)
     ).toBeInTheDocument();
     expect(
       getByText(

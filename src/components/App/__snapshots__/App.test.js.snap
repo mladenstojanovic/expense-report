@@ -25,6 +25,7 @@ exports[`Test App component should render correctly 1`] = `
 
 .c1 {
   height: 15vmin;
+  margin-bottom: 30px;
 }
 
 <div
