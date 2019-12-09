@@ -24,23 +24,23 @@ const defaultErrorState = {
   errorText: ''
 };
 
-export const handleSubmit = (event, email, phone, setError, dispatch) => {
+export const handleSubmit = (event, email, mobile, setError, dispatch) => {
   event.preventDefault();
-  if (!email && !phone) {
+  if (!email && !mobile) {
     setError({
       type: TYPE_ALL,
       errorText: EMPTY_FORM_ERROR_MESSAGE
     });
     return;
   }
-  if (email && phone && !isPhoneNumberValid(phone) && !isEmailValid(email)) {
+  if (email && mobile && !isPhoneNumberValid(mobile) && !isEmailValid(email)) {
     setError({
       type: TYPE_ALL,
       errorText: INVALID_PHONE_AND_EMAIL_MESSAGE
     });
     return;
   }
-  if (phone && !isPhoneNumberValid(phone)) {
+  if (mobile && !isPhoneNumberValid(mobile)) {
     setError({
       type: TYPE_PHONE,
       errorText: INVALID_PHONE_MESSAGE
@@ -51,7 +51,7 @@ export const handleSubmit = (event, email, phone, setError, dispatch) => {
     setError({ type: TYPE_EMAIL, errorText: INVALID_EMAIL_MESSAGE });
     return;
   }
-  dispatch(submitUser({ email, phone }));
+  dispatch(submitUser({ email, mobile }));
 };
 
 const CreateUser = () => {

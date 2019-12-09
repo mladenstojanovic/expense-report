@@ -213,7 +213,7 @@ describe('Test CreateUser component', () => {
     );
     expect(submitUser).toHaveBeenCalledWith({
       email: 'good@email.com',
-      phone: '+381641234567'
+      mobile: '+381641234567'
     });
   });
 });
