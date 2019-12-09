@@ -14,11 +14,15 @@ import {
   CREATE_USER_ERROR,
   ADD_BANK_CONNECTION_ERROR,
   CONNECTION_JOB_ERROR,
-  GET_TRANSACTIONS_ERROR,
-  SUCCESS,
-  RETRIEVE_TRANSACTIONS
+  GET_TRANSACTIONS_ERROR
 } from './network.constants';
-import { sleep, sortTransactionData } from '../../../utils/utils';
+import {
+  getAuthToken,
+  createUser,
+  addConnection,
+  connectionJob,
+  getTransactions
+} from './networkFetch.actions';
 
 export const getAuthTokenStart = () => ({
   type: GET_AUTH_TOKEN_START
@@ -85,151 +89,27 @@ export const networkOperationsStart = () => ({
   type: NETWORK_OPERATIONS_START
 });
 
-let userId;
-let token;
-let parsedAddConnectionResponse;
-let jobFinished = false;
-
-export const getAuthToken = async dispatch => {
-  try {
-    dispatch(networkOperationsStart());
-    dispatch(getAuthTokenStart());
-
-    const authResponse = await fetch(process.env.REACT_APP_TOKEN_ENDPOINT, {
-      headers: {
-        Authorization: `Basic ${process.env.REACT_APP_API_KEY}`
-      }
-    });
-    const authResponseParsed = await authResponse.json();
-
-    token = authResponseParsed.access_token;
-    dispatch(getAuthTokenSuccess());
-  } catch {
-    dispatch(getAuthTokenError());
-  }
-};
-
-export const createUser = async (dispatch, userData) => {
-  try {
-    dispatch(createUserStart());
-
-    const createUserResponse = await fetch(
-      `${process.env.REACT_APP_BASE_ENDPOINT}/users`,
-      {
-        method: 'POST',
-        body: JSON.stringify(userData),
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-    const createUserResponseJson = await createUserResponse.json();
-
-    userId = createUserResponseJson.id;
-    dispatch(createUserSuccess());
-  } catch {
-    dispatch(createUserError());
-  }
-};
-
-export const addConnection = async dispatch => {
-  try {
-    const testUser = {
-      loginId: process.env.REACT_APP_LOGIN_ID,
-      password: process.env.REACT_APP_LOGIN_PWD,
-      institution: {
-        id: process.env.REACT_APP_LOGIN_INSTITUTION_ID
-      }
-    };
-
-    dispatch(addBankConnectionStart());
-
-    const addConnectionResponse = await fetch(
-      `${process.env.REACT_APP_BASE_ENDPOINT}/users/${userId}/connections`,
-      {
-        method: 'POST',
-        body: JSON.stringify(testUser),
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'content-type': 'application/json'
-        }
-      }
-    );
-    parsedAddConnectionResponse = await addConnectionResponse.json();
-
-    // mozda neki error handling?
-
-    dispatch(addBankConnectionSuccess());
-  } catch {
-    dispatch(addBankConnectionError());
-  }
-};
-
-export const connectionJob = async dispatch => {
-  try {
-    dispatch(connectionJobStart());
-    //@TODO: config?
-    let retries = 20;
-    do {
-      //@TODO: config?
-      await sleep(10000);
-
-      const job = await fetch(`${parsedAddConnectionResponse.links.self}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'content-type': 'application/json'
-        }
-      });
-      const parsedJob = await job.json();
-      const retrieveTransactionJob = parsedJob.steps.find(
-        job => job.title === RETRIEVE_TRANSACTIONS
-      );
-
-      if (retrieveTransactionJob.status === SUCCESS) {
-        jobFinished = true;
-      } else {
-        retries--;
-      }
-    } while (!jobFinished && retries > 0);
-    if (jobFinished) {
-      dispatch(connectionJobSuccess());
-    } else {
-      dispatch(connectionJobError());
-    }
-  } catch {
-    dispatch(connectionJobError());
-  }
-};
-
-export const getTransactions = async dispatch => {
-  try {
-    dispatch(getTransactionsStart());
-    const getTransactionsResponse = await fetch(
-      `${process.env.REACT_APP_BASE_ENDPOINT}/users/${userId}/transactions`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-    const parsedGetTransactionsResponse = await getTransactionsResponse.json();
-
-    dispatch(
-      getTransactionsSuccess(
-        sortTransactionData(parsedGetTransactionsResponse.data)
-      )
-    );
-  } catch {
-    dispatch(getTransactionsError());
-  }
-};
-
 export const submitUser = userData => {
   return async dispatch => {
-    await getAuthToken(dispatch);
-    await createUser(dispatch, userData);
-    await addConnection(dispatch);
-    await connectionJob(dispatch);
+    const getAuthTokenResponse = await getAuthToken(dispatch);
+    if (getAuthTokenResponse.error) {
+      return;
+    }
+    const createUserResponse = await createUser(dispatch, userData);
+    if (createUserResponse.error) {
+      return;
+    }
+    const addConnectionResponse = await addConnection(dispatch);
+    if (addConnectionResponse.error) {
+      return;
+    }
+    const jobFinished = await connectionJob(
+      dispatch,
+      20,
+      10000,
+      addConnectionResponse.parsedAddConnectionResponse
+    );
+    /* istanbul ignore else */
     if (jobFinished) {
       await getTransactions(dispatch);
     }

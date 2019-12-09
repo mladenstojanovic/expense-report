@@ -16,7 +16,7 @@ const NetworkStatusSingle = props => (
 );
 
 NetworkStatusSingle.propTypes = {
-  networkStatus: PropTypes.string.isRequired,
+  networkStatus: PropTypes.string,
   networkTitle: PropTypes.string.isRequired
 };
 

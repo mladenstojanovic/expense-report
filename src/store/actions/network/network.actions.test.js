@@ -14,7 +14,8 @@ import {
   getTransactionsStart,
   getTransactionsSuccess,
   getTransactionsError,
-  networkOperationsStart
+  networkOperationsStart,
+  submitUser
 } from './network.actions';
 import {
   GET_AUTH_TOKEN_START,
@@ -34,8 +35,53 @@ import {
   CONNECTION_JOB_ERROR,
   GET_TRANSACTIONS_ERROR
 } from './network.constants';
+import {
+  getTransactions,
+  connectionJob,
+  addConnection,
+  createUser,
+  getAuthToken
+} from './networkFetch.actions';
 
-describe('Test network actions', () => {
+jest.mock('./networkFetch.actions', () => {
+  const mockNoError = { error: false };
+  const mockError = { error: true };
+  return {
+    getAuthToken: jest
+      .fn()
+      .mockResolvedValue(mockNoError)
+      .mockResolvedValueOnce(mockNoError)
+      .mockResolvedValueOnce(mockError),
+    createUser: jest
+      .fn()
+      .mockResolvedValue(mockNoError)
+      .mockResolvedValueOnce(mockNoError)
+      .mockResolvedValueOnce(mockError),
+    addConnection: jest
+      .fn()
+      .mockResolvedValue({
+        ...mockNoError,
+        parsedAddConnectionResponse: 'mock value'
+      })
+      .mockResolvedValueOnce({
+        ...mockNoError,
+        parsedAddConnectionResponse: 'mock value'
+      })
+      .mockResolvedValue(mockError),
+    connectionJob: jest
+      .fn()
+      .mockResolvedValue(true)
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(false),
+    getTransactions: jest.fn()
+  };
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+describe('Test simple network actions', () => {
   it('should return correct type when getAuthTokenStart is called', () => {
     expect(getAuthTokenStart()).toEqual({ type: GET_AUTH_TOKEN_START });
   });
@@ -104,5 +150,52 @@ describe('Test network actions', () => {
     expect(networkOperationsStart()).toEqual({
       type: NETWORK_OPERATIONS_START
     });
+  });
+});
+
+describe('Test submitUser action', () => {
+  it('should call all actions if every response is ok', async () => {
+    await submitUser({ email: 'mladen@stojanovic.com' })(jest.fn());
+    expect(getAuthToken).toHaveBeenCalled();
+    expect(createUser).toHaveBeenCalled();
+    expect(addConnection).toHaveBeenCalled();
+    expect(connectionJob).toHaveBeenCalled();
+    expect(getTransactions).toHaveBeenCalled();
+  });
+
+  it('should not call other actions if getAuthToken fails', async () => {
+    await submitUser({ email: 'mladen@stojanovic.com' })(jest.fn());
+    expect(getAuthToken).toHaveBeenCalled();
+    expect(createUser).not.toHaveBeenCalled();
+    expect(addConnection).not.toHaveBeenCalled();
+    expect(connectionJob).not.toHaveBeenCalled();
+    expect(getTransactions).not.toHaveBeenCalled();
+  });
+
+  it('should not call other actions if createUser fails', async () => {
+    await submitUser({ email: 'mladen@stojanovic.com' })(jest.fn());
+    expect(getAuthToken).toHaveBeenCalled();
+    expect(createUser).toHaveBeenCalled();
+    expect(addConnection).not.toHaveBeenCalled();
+    expect(connectionJob).not.toHaveBeenCalled();
+    expect(getTransactions).not.toHaveBeenCalled();
+  });
+
+  it('should not call other actions if addConnection fails', async () => {
+    await submitUser({ email: 'mladen@stojanovic.com' })(jest.fn());
+    expect(getAuthToken).toHaveBeenCalled();
+    expect(createUser).toHaveBeenCalled();
+    expect(addConnection).toHaveBeenCalled();
+    expect(connectionJob).not.toHaveBeenCalled();
+    expect(getTransactions).not.toHaveBeenCalled();
+  });
+
+  it('should not call other actions if jobFinished fails', async () => {
+    await submitUser({ email: 'mladen@stojanovic.com' })(jest.fn());
+    expect(getAuthToken).toHaveBeenCalled();
+    expect(createUser).toHaveBeenCalled();
+    expect(addConnection).toHaveBeenCalled();
+    expect(connectionJob).not.toHaveBeenCalled();
+    expect(getTransactions).not.toHaveBeenCalled();
   });
 });
