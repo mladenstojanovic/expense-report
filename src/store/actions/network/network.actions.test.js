@@ -155,7 +155,7 @@ describe('Test simple network actions', () => {
 
 describe('Test submitUser action', () => {
   it('should call all actions if every response is ok', async () => {
-    await submitUser({ email: 'mladen@stojanovic.com' })(jest.fn());
+    await submitUser({ email: 'mladen@stojan.com' })(jest.fn());
     expect(getAuthToken).toHaveBeenCalled();
     expect(createUser).toHaveBeenCalled();
     expect(addConnection).toHaveBeenCalled();
